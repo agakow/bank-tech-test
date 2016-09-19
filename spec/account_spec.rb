@@ -5,6 +5,8 @@ describe Account do
   it {is_expected.to respond_to(:deposit).with(1).argument}
   it {is_expected.to respond_to(:withdraw).with(1).argument}
   it {is_expected.to respond_to(:statement)}
+  let(:credit) {double :transaction, credit: 1000, balance: 1000}
+  let(:debit) {double :transaction, debit: 20, balance: 20}
 
   describe '#deposit' do
     it 'increases the balance with the amount given' do
@@ -13,9 +15,9 @@ describe Account do
     end
 
     it 'adds a log to account history' do
-      subject.deposit(20)
+      subject.account_history.add_transaction(credit)
       date = Time.new.strftime("%Y-%m-%d")
-      expect(subject.account_history.log).to eq [[date, 20, 0, 20]]
+      expect(subject.account_history.log).to eq [credit]
     end
 
     it 'raises error if amount given is negative' do
@@ -35,10 +37,10 @@ describe Account do
     end
 
     it 'adds a log to account history' do
-      subject.deposit(1000)
-      subject.withdraw(500)
+      subject.account_history.add_transaction(credit)
+      subject.account_history.add_transaction(debit)
       date = Time.new.strftime("%Y-%m-%d")
-      expect(subject.account_history.log).to eq [[date, 1000, 0, 1000], [date, 0, 500, 500]]
+      expect(subject.account_history.log).to eq [credit, debit]
     end
 
     it 'raises error on withdrawal when balance is 0' do
@@ -55,7 +57,7 @@ describe Account do
       subject.deposit(1000)
       subject.withdraw(500)
       date = Time.new.strftime("%Y-%m-%d")
-      expect(subject.statement).to eq [[date, 0, 500, 500], [date, 1000, 0, 1000]]
+      expect(subject.statement.length).to eq 2
     end
   end
 
