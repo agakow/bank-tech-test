@@ -14,8 +14,8 @@ describe Account do
 
     it 'adds a log to account history' do
       subject.deposit(20)
-      date = Time.new.strftime("%Y-%m-%d %H:%M:%S")
-      expect(subject.account_history.history).to eq [[date, 20, 0, 20]]
+      date = Time.new.strftime("%Y-%m-%d")
+      expect(subject.account_history.log).to eq [[date, 20, 0, 20]]
     end
 
     it 'raises error if amount given is negative' do
@@ -37,8 +37,8 @@ describe Account do
     it 'adds a log to account history' do
       subject.deposit(1000)
       subject.withdraw(500)
-      date = Time.new.strftime("%Y-%m-%d %H:%M:%S")
-      expect(subject.account_history.history).to eq [[date, 1000, 0, 1000], [date, 0, 500, 500]]
+      date = Time.new.strftime("%Y-%m-%d")
+      expect(subject.account_history.log).to eq [[date, 1000, 0, 1000], [date, 0, 500, 500]]
     end
 
     it 'raises error on withdrawal when balance is 0' do
@@ -51,7 +51,12 @@ describe Account do
   end
 
   describe '#statement' do
-
+    it 'prints a statement' do
+      subject.deposit(1000)
+      subject.withdraw(500)
+      date = Time.new.strftime("%Y-%m-%d")
+      expect(subject.statement).to eq [[date, 0, 500, 500], [date, 1000, 0, 1000]]
+    end
   end
 
 end

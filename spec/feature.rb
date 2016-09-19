@@ -4,4 +4,4 @@ account = Account.new
 account.deposit 50
 account.withdraw 10
 account.balance
-quit
+account.statement
